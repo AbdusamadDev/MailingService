@@ -1,13 +1,7 @@
-from rest_framework.pagination import PageNumberPagination, BasePagination
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.status import HTTP_200_OK
 from rest_framework.response import Response
-
-from mails.models import Mails, Message, Client
-from mails.serializers import MailingSerializer
-
-
-class MailingPagination(PageNumberPagination):
-    page_size = 5
+from django.db.models import QuerySet
 
 
 class BaseCustomPagination(PageNumberPagination):
@@ -27,6 +21,8 @@ class BaseCustomPagination(PageNumberPagination):
         return None
 
     def get_paginated_response(self, queryset, request, serializer):
+        if not isinstance(queryset, QuerySet):
+            raise TypeError(f"Expected a QuerySet, but got {type(queryset).__name__}.")
         (
             sent_mails_count,
             sent_next_link,
@@ -45,9 +41,7 @@ class BaseCustomPagination(PageNumberPagination):
         )
 
         sent_mails_serializer = serializer(instance=sent_mails_page, many=True)
-        pending_mails_serializer = serializer(
-            instance=pending_mails_page, many=True
-        )
+        pending_mails_serializer = serializer(instance=pending_mails_page, many=True)
 
         response_data = {
             "Total": queryset.count(),
@@ -72,15 +66,17 @@ class ClientsPagination(PageNumberPagination):
     page_size = 5
 
 
+class MessagesStatisticsPagination(BaseCustomPagination):
+    page_size = 5
+
+
 class MessagesPagination(PageNumberPagination):
     page_size = 5
 
 
-class MessagesStatisticsPagination(BaseCustomPagination):
+class MailingStatisticsPagination(BaseCustomPagination):
     page_size = 5
 
-    # def paginate_messages(self, )
 
-
-class MailingStatisticsPagination(BaseCustomPagination):
+class MailingPagination(PageNumberPagination):
     page_size = 5

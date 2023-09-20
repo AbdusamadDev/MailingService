@@ -2,6 +2,7 @@ from django.db import models
 import pytz as timezone
 
 
+# Status of mailings
 CHOICES = (("Sent", "Not Sent"), ("Sent", "Not Sent"))
 
 
@@ -26,6 +27,23 @@ class Mails(models.Model):
     status = models.CharField(max_length=15, choices=CHOICES, default="Not Sent")
     start_date = models.DateTimeField(null=False, blank=False)
     end_date = models.DateTimeField(null=False, blank=False)
+
+    class Meta:
+        """
+        Database indexing is vital for optimizing filtering operations,
+        especially with large datasets. By creating an index on specific
+        columns, the database can quickly identify and retrieve the desired rows,
+        significantly enhancing the efficiency and speed of filter-based queries
+
+        Based on task, those two fields are being filtered here.
+        """
+
+        ordering = ["pk"]
+        indexes = [
+            models.Index(
+                fields=["client_phone_code", "client_tag"], name="filter_indexes"
+            )
+        ]
 
 
 class Message(models.Model):
