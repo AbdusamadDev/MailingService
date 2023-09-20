@@ -13,6 +13,14 @@ class MailingViewset(ModelViewSet):
     queryset = models.Mails.objects.all()
     model = models.Mails
 
+    @action(detail=False, methods=["get"])
+    def statistics(self, request, *args, **kwargs):
+        self.pagination_class = (
+            pagination.MailingStatisticsPagination
+        )  # Set the custom pagination for this action
+        response = self.pagination_class().get_paginated_response(data=request)
+        return response
+
 
 class ClientsViewSet(ModelViewSet):
     model = models.Client
@@ -30,5 +38,7 @@ class MessagesViewSet(ModelViewSet):
     def list(self, request, *args, **kwargs):
         paginated_queryset = self.paginate_queryset(self.queryset)
         print(paginated_queryset)
-        context = serializers.MessagesStatisticsSerializer(paginated_queryset, many=True)
+        context = serializers.MessagesStatisticsSerializer(
+            paginated_queryset, many=True
+        )
         return self.get_paginated_response(context.data)
