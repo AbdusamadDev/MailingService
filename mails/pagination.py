@@ -21,6 +21,7 @@ class BaseCustomPagination(PageNumberPagination):
         return None
 
     def get_paginated_response(self, queryset, request, serializer):
+        """Combination goes here"""
         if not isinstance(queryset, QuerySet):
             raise TypeError(f"Expected a QuerySet, but got {type(queryset).__name__}.")
         (
@@ -43,6 +44,7 @@ class BaseCustomPagination(PageNumberPagination):
         sent_mails_serializer = serializer(instance=sent_mails_page, many=True)
         pending_mails_serializer = serializer(instance=pending_mails_page, many=True)
 
+        # Retrivial Context construction
         response_data = {
             "Total": queryset.count(),
             "Sent": {
