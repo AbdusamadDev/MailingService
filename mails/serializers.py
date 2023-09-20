@@ -30,6 +30,9 @@ class MessagesStatisticsSerializer(serializers.ModelSerializer):
         model = Message
         fields = "__all__"
 
+    def validate_start_date(self):
+        pass
+    
 
 class MessagesSerializer(serializers.ModelSerializer):
     class Meta:
