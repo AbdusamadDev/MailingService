@@ -14,17 +14,20 @@ class Client(models.Model):
 
 
 class Mails(models.Model):
+    CHOICES = (("Sent", "Not Sent"), ("Sent", "Not Sent"))
     client_phone_code = models.CharField(
         max_length=30, null=False, unique=False, blank=False
     )
     client_tag = models.CharField(max_length=50, unique=False, blank=False, null=False)
     body = models.TextField(max_length=5000, blank=False, null=False, unique=False)
-    start_date = models.DateTimeField(auto_now_add=True)
-    end_date = models.DateTimeField(null=True, blank=True)
+    # Extra field for classify mails with their sending status
+    status = models.CharField(max_length=15, choices=CHOICES, default="Not Sent")
+    start_date = models.DateTimeField(null=False, blank=False)
+    end_date = models.DateTimeField(null=False, blank=False)
 
 
 class Message(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     mail = models.ForeignKey(Mails, on_delete=models.CASCADE)
-    status = models.CharField(max_length=50, default="pending")
+    is_sent = models.BooleanField(default=0, blank=False, unique=False, null=False)
     sent_at = models.DateTimeField(null=True, blank=True)

@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-2l8z1^f$tl1zpr1$^)r**37(k%$fdbl1ppz!pz=#_89o-@rey9
 DEBUG = True
 ALLOWED_HOSTS = []
 REST_FRAMEWORK = {
-    "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
+    # "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
     "DEFAULT_RENDERER_CLASSES": [
         "rest_framework.renderers.JSONRenderer",
         "rest_framework.renderers.BrowsableAPIRenderer",
