@@ -1,4 +1,4 @@
-from rest_framework.pagination import PageNumberPagination
+from rest_framework.pagination import PageNumberPagination, BasePagination
 from rest_framework.status import HTTP_200_OK
 from rest_framework.response import Response
 
@@ -10,7 +10,7 @@ class MailingPagination(PageNumberPagination):
     page_size = 5
 
 
-class MailingStatisticsPagination(PageNumberPagination):
+class BaseCustomPagination(PageNumberPagination):
     page_size = 5
 
     def paginate_sent_mails(self, queryset, request, page_param):
@@ -26,38 +26,38 @@ class MailingStatisticsPagination(PageNumberPagination):
             )
         return None
 
-    def get_paginated_response(self, data):
-        mails = Mails.objects.all()
-
+    def get_paginated_response(self, queryset, request, serializer):
         (
             sent_mails_count,
             sent_next_link,
             sent_previous_link,
             sent_mails_page,
-        ) = self.paginate_sent_mails(mails.filter(status="Sent"), data, "sent_mails")
+        ) = self.paginate_sent_mails(
+            queryset.filter(status="Sent"), request, "sent_mails"
+        )
         (
             pending_mails_count,
             pending_next_link,
             pending_previous_link,
             pending_mails_page,
         ) = self.paginate_sent_mails(
-            mails.filter(status="Not Sent"), data, "pending_mails"
+            queryset.filter(status="Not Sent"), request, "pending_mails"
         )
 
-        sent_mails_serializer = MailingSerializer(instance=sent_mails_page, many=True)
-        pending_mails_serializer = MailingSerializer(
+        sent_mails_serializer = serializer(instance=sent_mails_page, many=True)
+        pending_mails_serializer = serializer(
             instance=pending_mails_page, many=True
         )
 
         response_data = {
-            "Total Mails": mails.count(),
-            "Sent Mails": {
+            "Total": queryset.count(),
+            "Sent": {
                 "count": sent_mails_count,
                 "next": sent_next_link,
                 "previous": sent_previous_link,
                 "results": sent_mails_serializer.data,
             },
-            "Pending Mails": {
+            "Pending": {
                 "count": pending_mails_count,
                 "next": pending_next_link,
                 "previous": pending_previous_link,
@@ -73,4 +73,14 @@ class ClientsPagination(PageNumberPagination):
 
 
 class MessagesPagination(PageNumberPagination):
+    page_size = 5
+
+
+class MessagesStatisticsPagination(BaseCustomPagination):
+    page_size = 5
+
+    # def paginate_messages(self, )
+
+
+class MailingStatisticsPagination(BaseCustomPagination):
     page_size = 5

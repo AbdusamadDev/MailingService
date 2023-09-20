@@ -2,6 +2,9 @@ from django.db import models
 import pytz as timezone
 
 
+CHOICES = (("Sent", "Not Sent"), ("Sent", "Not Sent"))
+
+
 class Client(models.Model):
     TIMEZONE_CHOICES = [(tz, tz) for tz in timezone.all_timezones]
     username = models.CharField(max_length=150, null=False, unique=True, blank=False)
@@ -14,7 +17,6 @@ class Client(models.Model):
 
 
 class Mails(models.Model):
-    CHOICES = (("Sent", "Not Sent"), ("Sent", "Not Sent"))
     client_phone_code = models.CharField(
         max_length=30, null=False, unique=False, blank=False
     )
@@ -29,5 +31,12 @@ class Mails(models.Model):
 class Message(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     mail = models.ForeignKey(Mails, on_delete=models.CASCADE)
-    is_sent = models.BooleanField(default=0, blank=False, unique=False, null=False)
+    status = models.CharField(
+        max_length=20,
+        choices=CHOICES,
+        default="Not Sent",
+        blank=False,
+        unique=False,
+        null=False,
+    )
     sent_at = models.DateTimeField(null=True, blank=True)

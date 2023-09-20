@@ -19,11 +19,12 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
-from mails.views import MailingViewset
+from mails.views import MailingViewSet, MessagesViewSet
 
 
 router = DefaultRouter()
-router.register(r"mails", MailingViewset)
+router.register(r"mails", MailingViewSet)
+router.register(r"messages", MessagesViewSet)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
