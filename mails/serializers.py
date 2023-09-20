@@ -33,7 +33,7 @@ class MessagesStatisticsSerializer(serializers.ModelSerializer):
     def validate_start_date(self):
         pass
     
-#
+
 class MessagesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
