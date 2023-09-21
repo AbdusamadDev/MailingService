@@ -109,6 +109,8 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
+CELERY_ENABLE_UTC = True
+CELERY_TIMEZONE = 'UTC'
 
 
 # Internationalization
