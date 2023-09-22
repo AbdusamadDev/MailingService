@@ -6,4 +6,4 @@ class MailsConfig(AppConfig):
     name = "mails"
 
     def ready(self):
-        import mails.signals  # Importing your signals.py here
+        import mails.signals  # Importing signals.py here

@@ -33,7 +33,11 @@ class MailingViewSet(ModelViewSet):
         tag = serializer.validated_data.get("client_tag")
         clients = models.Client.objects.filter(Q(phone_number=phone_code) | Q(tag=tag))
         if clients.exists():
-            return self.perform_create(serializer=serializer)
+            self.perform_create(serializer=serializer)
+            headers = self.get_success_headers(serializer.data)
+            return Response(
+                serializer.data, status=status.HTTP_201_CREATED, headers=headers
+            )
         else:
             return Response(
                 data={
@@ -58,8 +62,8 @@ class MailingViewSet(ModelViewSet):
 
 class ClientsViewSet(ModelViewSet):
     """
-    Base CRUD for Clients. All methods stay default, no need to customize
-    because of task requirements.
+    Base CRUD for Clients. All methods stay default,
+    no need to customize.
     """
 
     model = models.Client

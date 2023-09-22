@@ -12,6 +12,7 @@ class Client(models.Model):
     email = models.EmailField(max_length=250, null=False, unique=True, blank=False)
     tag = models.CharField(max_length=50, null=False, blank=False, unique=False)
     phone_number = models.IntegerField(null=False, unique=False, blank=False)
+    phone_code = models.SmallIntegerField(null=False, unique=False, blank=False, default=998)
     timezone = models.CharField(max_length=63, choices=TIMEZONE_CHOICES, default="UTC")
     # Django uses timezone by default
     date_joined = models.DateTimeField(auto_now_add=True)

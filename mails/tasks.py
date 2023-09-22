@@ -1,6 +1,8 @@
-from celery import shared_task
+from celery import Celery
 
-@shared_task
-def schedule_send(instance):
-    # Your logic here
-    pass
+app = Celery('tasks', broker='pyamqp://guest:guest@localhost//')
+
+
+@app.task
+def schedule_send(instance, client, mail):
+    print(instance, client, mail)
