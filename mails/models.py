@@ -16,6 +16,13 @@ class Client(models.Model):
     # Django uses timezone by default
     date_joined = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self) -> str:
+        return "Client %s\n\nPhone Number: %s\nEmail: %s\n" % (
+            self.username,
+            self.phone_number,
+            self.email,
+        )
+
 
 class Mails(models.Model):
     client_phone_code = models.CharField(
@@ -44,6 +51,14 @@ class Mails(models.Model):
                 fields=["client_phone_code", "client_tag"], name="filter_indexes"
             )
         ]
+
+    def __str__(self) -> str:
+        return "Mail (%s)\n\nClient tag: %s\nPhone code: %s\nBody:\n%s" % (
+            self.pk,
+            self.client_tag,
+            self.client_phone_code,
+            self.body,
+        )
 
 
 class Message(models.Model):

@@ -1,5 +1,8 @@
+from django.db.models import Q
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
+from rest_framework.response import Response
+from rest_framework import status
 
 from mails import (
     pagination,
@@ -19,6 +22,25 @@ class MailingViewSet(ModelViewSet):
     serializer_class = serializers.MailingSerializer
     queryset = models.Mails.objects.all()
     model = models.Mails
+
+    def create(self, request, *args, **kwargs):
+        """
+        Checking if client with given filter properties exist
+        """
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        phone_code = serializer.validated_data.get("client_phone_code")
+        tag = serializer.validated_data.get("client_tag")
+        clients = models.Client.objects.filter(Q(phone_number=phone_code) | Q(tag=tag))
+        if clients.exists():
+            return self.perform_create(serializer=serializer)
+        else:
+            return Response(
+                data={
+                    "msg": f"Filter properties with {tag} and {phone_code} not found"
+                },
+                status=status.HTTP_404_NOT_FOUND,
+            )
 
     # Special listing (fetching statistics) as required in the task
     @action(detail=False, methods=["get"])

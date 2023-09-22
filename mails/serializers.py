@@ -19,6 +19,7 @@ class MailingSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         print(attrs.get("start_date"))
         print(attrs.get("end_date"))
+        print(attrs.get("start_date") > attrs.get("end_date"))
         if attrs.get("start_date") > attrs.get("end_date"):
             raise ValidationError("Impossible datetime entered!")
         return attrs
