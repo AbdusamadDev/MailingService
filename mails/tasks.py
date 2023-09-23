@@ -1,8 +1,10 @@
-from celery import Celery
+# tasks.py
+from celery import shared_task
+import logging
 
-app = Celery('tasks', broker='pyamqp://guest:guest@localhost//')
+logger = logging.getLogger(__name__)
 
-
-@app.task
+@shared_task
 def schedule_send(instance, client, mail):
     print(instance, client, mail)
+    logger.info("Executing task: %s %s %s", instance, client, mail)

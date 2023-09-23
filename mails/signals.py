@@ -31,24 +31,36 @@ def handle_creation(sender, instance, created, **kwargs):
                 "text": instance.body,
                 "phone": client.phone_number,
             }
-            if (
-                instance.start_date <= now() <= instance.end_date
-            ):  # checking if it's time to send
-                """
-                The `if` condition is defined to prevent if for some reason
-                data will be created right at the same time that should be sent
-                """
-                result = schedule_send.apply_async(
-                    args=[json_data, client.id, instance.id],
-                    expires=instance.end_date,
-                )
-                # print(result.result)
-            elif (
-                instance.start_date > now() and instance.end_date > instance.start_date
-            ):  # checking both start and end time hasn't come yet
-                result = schedule_send.apply_async(
-                    args=[json_data, client.id, instance.id],
-                    eta=instance.start_date,
-                    expires=instance.end_date,
-                )
-                # print(result.result)
+            print("Datetime: ", instance.start_date < now() < instance.end_date)
+            print(instance.start_date)
+            print(now())
+            print(instance.end_date)
+            result = schedule_send.apply_async(
+                args=[json_data, client.id, instance.id],
+                eta=instance.start_date,
+                expires=instance.end_date,
+            )
+
+            # if (
+            #     instance.start_date <= now() <= instance.end_date
+            # ):  # checking if it's time to send
+            #     """
+            #     The `if` condition is defined to prevent if for some reason
+            #     data will be created right at the same time that should be sent
+            #     """
+            #     print("It is time to send")
+            #     result = schedule_send.apply_async(
+            #         args=[json_data, client.id, instance.id],
+            #         expires=instance.end_date,
+            #     )
+            #     # print(result.result)
+            # elif (
+            #     instance.start_date > now() and instance.end_date > instance.start_date
+            # ):  # checking both start and end time hasn't come yet
+            #     print("It is scheduled")
+            #     result = schedule_send.apply_async(
+            #         args=[json_data, client.id, instance.id],
+            #         eta=instance.start_date,
+            #         expires=instance.end_date,
+            #     )
+            #     # print(result.result)

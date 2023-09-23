@@ -6,3 +6,11 @@ Authentication is the most important and default feature of any kind of web appl
 
 If you are on windows from following link download RabbitMQ for message broker server:
 <a href="https://github.com/rabbitmq/rabbitmq-server/releases/download/v3.12.5/rabbitmq-server-3.125.exe">RabbitMQ</a>
+
+
+Add Redis environment variable to PATH
+On linux:
+export PATH=$PATH:/path/to/directory
+
+On windows:
+$env:Path += ";C:\Program Files\Redis\" # Where your Redis root directory is located

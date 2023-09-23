@@ -7,3 +7,4 @@ class MailsConfig(AppConfig):
 
     def ready(self):
         import mails.signals  # Importing signals.py here
+        import mails.tasks
