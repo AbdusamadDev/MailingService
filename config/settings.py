@@ -24,7 +24,7 @@ SECRET_KEY = "django-insecure-2l8z1^f$tl1zpr1$^)r**37(k%$fdbl1ppz!pz=#_89o-@rey9
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["192.168.1.65", "127.0.0.1"]
 REST_FRAMEWORK = {
     # "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
     "DEFAULT_RENDERER_CLASSES": [
@@ -59,6 +59,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    # Assigning timezone middlware to get client's timezone
+    "config.middleware.TimezoneMiddleware"
 ]
 
 ROOT_URLCONF = "config.urls"

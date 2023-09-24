@@ -19,7 +19,11 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
-from mails.views import MailingViewSet, MessagesViewSet, ClientsViewSet
+from mails.views import (
+    MailingViewSet,
+    MessagesViewSet,
+    ClientsViewSet,
+)
 
 
 router = DefaultRouter()
