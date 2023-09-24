@@ -59,8 +59,6 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    # Assigning timezone middlware to get client's timezone
-    "config.middleware.TimezoneMiddleware"
 ]
 
 ROOT_URLCONF = "config.urls"

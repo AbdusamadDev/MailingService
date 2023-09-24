@@ -34,11 +34,22 @@ def handle_creation(sender, instance, created, **kwargs):
                 "phone": client.phone_number,
             }
             # json_data, client.id, instance.id
-            timezone = pytz.timezone("Asia/Tashkent")
+            timezone = pytz.timezone(client.timezone)
             desired_eta_local = timezone.localize(
                 datetime.strptime(
                     str(instance.start_date).split("+")[0], "%Y-%m-%d %H:%M:%S"
                 )
             )
 
-            schedule_send.apply_async(args=[json_data], eta=desired_eta_local)
+            schedule_send.apply_async(
+                args=(json_data, client.pk, instance.id),
+                # kwargs={
+                #     "json_data": json_data,
+                #     "client_id": client.pk,
+                #     "mail_id": instance.id,
+                # },
+                eta=desired_eta_local,
+            )
+        mailing = Mails.objects.get(pk=instance.id)
+        mailing.status = "Sent"
+        mailing.save()
