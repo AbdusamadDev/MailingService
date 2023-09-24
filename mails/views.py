@@ -5,17 +5,11 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
 
-
-from datetime import datetime
-import pytz
-
 from mails import (
     pagination,
     filters,
     serializers,
     models,
-    tasks,
-    utils,
 )
 
 
@@ -34,16 +28,8 @@ class MailingViewSet(ModelViewSet):
         """
         Checking if client with given filter properties exist
         """
-        print("Timezone: ", request.timezone)
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        start_date = serializer.validated_data.get("start_date")
-        print("Input ", start_date)
-        print("Time:     ", utils.get_time(str(start_date).split("+")[0]))
-        tasks.schedule_send.apply_async(
-            args=[],
-            countdown=utils.get_time(str(start_date).split("+")[0]),  # "2023-09-24" #serializer.validated_data.get("start_date")
-        )
         phone_code = serializer.validated_data.get("client_phone_code")
         tag = serializer.validated_data.get("client_tag")
         clients = models.Client.objects.filter(Q(phone_number=phone_code) | Q(tag=tag))
