@@ -1,10 +1,11 @@
-# tasks.py
 from celery import shared_task
-import logging
 
-logger = logging.getLogger(__name__)
+@shared_task(bind=True)
+def schedule_send(self):
+    # Task implementation here
+    # print(instance)
+    # print(client_id)
+    # print(mail_id)
+    return "Everything is okay, homie"
 
-@shared_task
-def schedule_send(instance, client, mail):
-    print(instance, client, mail)
-    logger.info("Executing task: %s %s %s", instance, client, mail)
+print("File is being run")

@@ -4,11 +4,14 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
 
+from datetime import datetime, timedelta
+
 from mails import (
     pagination,
     filters,
     serializers,
     models,
+    tasks,
 )
 
 
@@ -27,6 +30,7 @@ class MailingViewSet(ModelViewSet):
         """
         Checking if client with given filter properties exist
         """
+        tasks.schedule_send.delay()
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         phone_code = serializer.validated_data.get("client_phone_code")

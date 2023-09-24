@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
-    # 'mails.apps.MailsConfig',
+    "django_celery_results",
     "mails",
 ]
 
@@ -113,10 +113,10 @@ AUTH_PASSWORD_VALIDATORS = [
 CELERY_ENABLE_UTC = True
 CELERY_TIMEZONE = "UTC"
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
-CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
-
+CELERY_RESULT_BACKEND = 'django-db'
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
