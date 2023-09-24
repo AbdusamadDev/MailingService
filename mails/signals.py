@@ -5,10 +5,10 @@ from django.db.models import Q
 
 from mails.models import Mails, Client, Message
 from mails.tasks import schedule_send
-from mails import utils
 
-from datetime import timedelta, datetime
+import pytz
 import logging
+from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
@@ -34,17 +34,11 @@ def handle_creation(sender, instance, created, **kwargs):
                 "phone": client.phone_number,
             }
             # json_data, client.id, instance.id
-            start_datetime = utils.get_time(str(instance.start_date).split("+")[0])
+            timezone = pytz.timezone("Asia/Tashkent")
+            desired_eta_local = timezone.localize(
+                datetime.strptime(
+                    str(instance.start_date).split("+")[0], "%Y-%m-%d %H:%M:%S"
+                )
+            )
 
-            if (
-                instance.start_date <= now() <= instance.end_date
-            ):  # checking if it's time to send
-                """
-                The `if` condition is defined to prevent if for some reason
-                data will be created right at the same time that should be sent
-                """
-                schedule_send.apply_async(args=[json_data], countdown=start_datetime)
-            elif (
-                instance.start_date > now() and instance.end_date > instance.start_date
-            ):  # checking both start and end time hasn't come yet
-                schedule_send.apply_async(args=[json_data], countdown=start_datetime)
+            schedule_send.apply_async(args=[json_data], eta=desired_eta_local)
